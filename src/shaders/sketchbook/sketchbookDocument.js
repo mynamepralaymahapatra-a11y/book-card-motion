@@ -8,5 +8,6 @@ const HOST_STYLE = "<style id=\"threeui-sketchbook-host\">\nhtml,body,.page{widt
 export function createSketchbookDocument(assetBaseUrl = "/sketchbook/") {
   const base = assetBaseUrl.endsWith("/") ? assetBaseUrl : `${assetBaseUrl}/`;
   const withAssets = CANONICAL_SKETCHBOOK_HTML.replaceAll("sketchbook/", base);
-  return withAssets.replace("</head>", `${HOST_STYLE}</head>`);
+  const withBaseTag = withAssets.replace("<head>", `<head><base href="${base}">`);
+  return withBaseTag.replace("</head>", `${HOST_STYLE}</head>`);
 }

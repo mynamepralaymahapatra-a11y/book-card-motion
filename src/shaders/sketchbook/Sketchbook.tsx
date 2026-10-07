@@ -11,7 +11,13 @@ export function Sketchbook({
   className = "",
 }: SketchbookProps) {
   const [ready, setReady] = useState(false);
-  const documentSource = useMemo(() => createSketchbookDocument(assetBaseUrl), [assetBaseUrl]);
+  const documentSource = useMemo(() => {
+    const origin = typeof window !== "undefined" ? window.location.origin : "";
+    const baseUrl = assetBaseUrl.startsWith("http")
+      ? assetBaseUrl
+      : `${origin}${assetBaseUrl.startsWith("/") ? "" : "/"}${assetBaseUrl}`;
+    return createSketchbookDocument(baseUrl);
+  }, [assetBaseUrl]);
 
   return (
     <div className={`sketchbook${className ? ` ${className}` : ""}`} data-state={ready ? "ready" : "loading"}>
@@ -19,7 +25,7 @@ export function Sketchbook({
         className={`sketchbook__frame${ready ? " is-ready" : ""}`}
         title="Interactive Singapore sketchbook"
         srcDoc={documentSource}
-        sandbox="allow-scripts"
+        sandbox="allow-scripts allow-same-origin"
         loading="eager"
         onLoad={() => setReady(true)}
       />
